@@ -40,3 +40,6 @@ Thumbs.db
 *
 !/**/
 !*.*
+
+#google doc api key
+*.json

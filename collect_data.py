@@ -13,6 +13,8 @@ class dataWriter(object):
         self.startdate = day1
         self.enddate = day2
         self.save_address = save_address
+        if not os.path.exists(self.save_address):
+            os.mkdir(self.save_address)
         if not os.path.exists(self.save_address+'/'+str(self.originasns)):
             os.mkdir(self.save_address+'/'+str(self.originasns))
         self.save_address = self.save_address+str(self.originasns)+'/'

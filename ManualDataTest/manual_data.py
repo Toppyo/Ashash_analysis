@@ -1,8 +1,11 @@
 import numpy as np
 import random
 from ManualDataTest.clean_manual_data import clean
+import os
 
 save_address = "../results_manual/"
+if not os.path.exists(save_address):
+    os.mkdir(save_address)
 
 def create_peak(mu, sigma, anomaly):
     key = str(int(random.random()*10000))+"_"+str(int(random.random()*10000))
