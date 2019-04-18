@@ -4,6 +4,7 @@ from datetime import datetime,timedelta
 import shutil
 from threading import Thread
 from queue import Queue
+import numpy as np
 
 save_address= './results/'
 
@@ -123,8 +124,55 @@ class recordWriter(object):
         self.filename = filename
 
     def add(self, output):
-        self.outputs.append(output)
+        self.outputs.append(str(output))
 
     def write(self, mode):
         with open(self.filename, mode=mode) as output:
             output.write("\n".join(self.outputs))
+
+class dataAnalyser(object):
+    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.01):
+        self.origin_dir = origin_dir + str(originasn) + "/"
+        self.originasn = originasn
+        self.add_noise = add_noise
+        self.baseline_median = {}
+        self.baseline_mad = {}
+        self.alertCounter = {}
+        save_address = self.originasn + "alerts"
+        self.rw = recordWriter(save_address)
+
+    def main(self):
+        for file in os.listdir(self.origin_dir):
+            try:
+                data = np.loadtxt(self.origin_dir+file, delimiter="\n", unpack=True)
+                median, mad = self.getBaseline(data)
+                key = file
+                self.baseline_median[key] = median
+                self.baseline_mad[key] = mad
+            except:
+                self.alertCounter[file] = 0
+        self.updateAlerts()
+        # for date in self.alertCounter.keys():
+        #     data_address = self.save_address + date + "/"
+
+
+    def getBaseline(self, data):
+        if self.add_noise:
+            data += np.random.normal(0, 0.02, 96)
+        mad = np.median(np.abs(data - np.median(data)))
+        return np.median(data), mad
+
+    def updateAlerts(self):
+        for date in self.alertCounter.keys():
+            count = 0
+            data_address = self.origin_dir + date + "/"
+            for file in os.listdir(data_address):
+                key = file
+                data = np.loadtxt(data_address+file, delimiter="\n", unpack=True)
+                sub_count = sum([1 if (x > self.baseline_median[key]+3*self.baseline_mad[key]
+                                       or x < self.baseline_median[key]-3*self.baseline_mad[key]) else 0 for x in data ])
+                count += sub_count
+                # TODO deal with 0*96 "invisible" file in each day
+            self.rw.add(date + ": " + str(count))
+            self.alertCounter[date] = count
+        self.rw.write("w+")
