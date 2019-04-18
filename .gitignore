@@ -40,6 +40,10 @@ Thumbs.db
 *
 !/**/
 !*.*
+*.pickle
 
-#google doc api key
+# google doc api key #
 *.json
+
+# test files #
+test.py
