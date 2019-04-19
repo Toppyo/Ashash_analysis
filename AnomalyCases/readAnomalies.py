@@ -2,7 +2,7 @@ import pygsheets
 import pandas as pd
 import os
 from datetime import datetime, timedelta
-from tools import dataWriter, ThreadPool
+from tools import dataWriter, dataAnalyser, ThreadPool
 
 save_address = '../results_anomalies/'
 time_window = 7
@@ -63,6 +63,20 @@ def writingWorker(params):
     dw = dataWriter(params[0], params[1], params[2], params[3])
     dw.main(False)
 
+def analysingWorker(asn):
+    da = dataAnalyser(origin_dir=save_address, originasn=asn)
+    da.main()
+
+def analyzeAnomalies():
+    q = []
+    pool = ThreadPool(4)
+    for dir in os.listdir(save_address):
+        if os.path.isdir(save_address + dir):
+            q.append(int(dir))
+    pool.map(analysingWorker, q)
+    pool.wait_completion()
+
 if __name__ == '__main__':
-    writeAnomalies('A2:E12')
+    # writeAnomalies('A2:E12')
     # writeAnomalies('A14:E20')
+    analyzeAnomalies()

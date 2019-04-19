@@ -191,6 +191,7 @@ class dataAnalyser(object):
             for asn in asns:
                 if 0 < self.baseline_median[asn] - self.baseline_mad[asn]*3:
                     count += 96
+                    self.rw.add(asn.split("_")[1] + ": 96")
             self.rw.add(date + ": " + str(count) + "\n")
             self.alertCounter[date] = count
         self.rw.write("w+")
