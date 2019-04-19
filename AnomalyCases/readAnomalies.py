@@ -3,6 +3,7 @@ import pandas as pd
 import os
 from datetime import datetime, timedelta
 from tools import dataWriter, dataAnalyser, ThreadPool
+import shutil
 
 save_address = '../results_anomalies/'
 time_window = 7
@@ -27,20 +28,24 @@ def readAnomalies(boundary):
                 output.write(','.join(data)+'\n')
     return anomalies
 
-def clearAnomalies():
+def clearAnomalies(deep=False):
     try:
         os.remove("./anomalies")
     except:
         pass
-    for file in os.listdir(save_address):
-        try:
-            os.remove(save_address+file)
-        except:
-            pass
+    if deep:
+        shutil.rmtree(save_address)
+        os.mkdir(save_address)
+    else:
+        for dir in os.listdir(save_address):
+            address = save_address + dir +"/"
+            for file in address:
+                if os.path.isfile(file):
+                    os.remove(file)
 
-def writeAnomalies(boundary, clear=True):
-    if clear:
-        clearAnomalies()
+def writeAnomalies(boundary, all_clear=False):
+    ret = []
+    clearAnomalies(all_clear)
     anomalies = readAnomalies(boundary)
     pool = ThreadPool(4)
     tasks = []
@@ -49,34 +54,44 @@ def writeAnomalies(boundary, clear=True):
         t1, t2 = calculateTimeWindow(anomaly[1], anomaly[2])
         print(t1)
         print(t2)
+        ret.append([anomaly[0], t1, t2])
         tasks.append([anomaly[0], t1, t2, save_address])
     pool.map(writingWorker, tasks)
     pool.wait_completion()
+    return ret
         # dw = dataWriter(anomaly[0], t1, t2, save_address=save_address)
         # dw.main(False)
 
-def calculateTimeWindow(t1, t2):
-    return str(datetime.strptime(t1, '%Y-%m-%d')-timedelta(days=time_window))[:10],\
-           str(datetime.strptime(t2, '%Y-%m-%d')+timedelta(days=time_window))[:10]
+# F for forward, N for normal
+def calculateTimeWindow(t1, t2, mode='F'):
+    if mode=='N':
+        return str(datetime.strptime(t1, '%Y-%m-%d')-timedelta(days=time_window))[:10],\
+               str(datetime.strptime(t2, '%Y-%m-%d')+timedelta(days=time_window))[:10]
+    if mode=='F':
+        return str(datetime.strptime(t1, '%Y-%m-%d')-2*timedelta(days=time_window))[:10], t2
 
 def writingWorker(params):
-    dw = dataWriter(params[0], params[1], params[2], params[3])
-    dw.main(False)
+    dataWriter(params[0], params[1], params[2], params[3]).main(False)
 
-def analysingWorker(asn):
-    da = dataAnalyser(origin_dir=save_address, originasn=asn)
-    da.main()
+def analysingWorker(params):
+    if len(params)==1:
+        dataAnalyser(origin_dir=save_address, originasn=params[0]).main()
+    else:
+        dataAnalyser(origin_dir=save_address, originasn=params[0], start=params[1], end=params[2]).main()
 
-def analyzeAnomalies():
+def analyzeAnomalies(params=None):
     q = []
     pool = ThreadPool(4)
-    for dir in os.listdir(save_address):
-        if os.path.isdir(save_address + dir):
-            q.append(int(dir))
+    if params is None:
+        for dir in os.listdir(save_address):
+            if os.path.isdir(save_address + dir):
+                q.append(int(dir))
+    else:
+        q = params
     pool.map(analysingWorker, q)
     pool.wait_completion()
 
 if __name__ == '__main__':
-    # writeAnomalies('A2:E12')
-    # writeAnomalies('A14:E20')
-    analyzeAnomalies()
+    # params = writeAnomalies('A2:E12', all_clear=True)
+    params = writeAnomalies('A14:E20', all_clear=False)
+    analyzeAnomalies(params=params)

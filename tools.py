@@ -142,11 +142,13 @@ class recordWriter(object):
             output.write("\n".join(self.outputs))
 
 class dataAnalyser(object):
-    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.02):
+    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.02, start="all", end="all"):
         self.origin_dir = origin_dir + str(originasn) + "/"
         self.originasn = originasn
         self.add_noise = add_noise
         self.noise_sd = noise_sd
+        self.start = start
+        self.end = end
         self.baseline_median = {}
         self.baseline_mad = {}
         self.alertCounter = {}
@@ -166,20 +168,22 @@ class dataAnalyser(object):
                 self.baseline_median[key] = median
                 self.baseline_mad[key] = mad
             else:
-                self.alertCounter[file] = 0
-        print(self.baseline_mad)
-        print(self.alertCounter)
+                if self.start is not "all":
+                    if (datetime.strptime(file, '%Y-%m-%d')-datetime.strptime(self.start, '%Y-%m-%d'))/timedelta(days=1) > -1 \
+                            or (datetime.strptime(file, '%Y-%m-%d')-datetime.strptime(self.end, '%Y-%m-%d'))/timedelta(days=1) < 1:
+                        self.alertCounter[file] = 0
+                else:
+                    self.alertCounter[file] = 0
+        # print(self.baseline_mad)
+        # print(self.alertCounter)
         self.updateAlerts()
-        # for date in self.alertCounter.keys():
-        #     data_address = self.save_address + date + "/"
-
 
     def getBaseline(self, data):
         if self.add_noise:
             data += np.random.normal(0, self.noise_sd, len(data))
         mad = np.median(np.abs(data - np.median(data)))
-        print(np.median(data))
-        print(mad)
+        # print(np.median(data))
+        # print(mad)
         return np.median(data), mad
 
     def updateAlerts(self):
@@ -199,11 +203,11 @@ class dataAnalyser(object):
                 count += sub_count
                 if sub_count>5:
                     self.rw.add(key.split("_")[1] + ": " + str(sub_count))
-            # deal with 0*96 "invisible" file in each day
-            for asn in asns:
-                if 0 < self.baseline_median[asn] - self.baseline_mad[asn]*3:
-                    count += 96
-                    self.rw.add(asn.split("_")[1] + ": 96(0)")
+            # deal with 0*96 "invisible" file in each day # TODO should we?
+            # for asn in asns:
+            #     if 0 < self.baseline_median[asn] - self.baseline_mad[asn]*3:
+                    # count += 96
+                    # self.rw.add(asn.split("_")[1] + ": 96(0)")
             self.rw.add(date + ": " + str(count) + "\n")
             self.alertCounter[date] = count
         self.rw.write("w+")
