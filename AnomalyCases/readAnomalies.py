@@ -4,8 +4,11 @@ import os
 from datetime import datetime, timedelta
 from tools import dataWriter, dataAnalyser, ThreadPool
 import shutil
+import numpy as np
+import matplotlib.pyplot as plt
 
-save_address = '../results_anomalies/'
+save_address = "../results_anomalies/"
+fig_address = "./results_figure/"
 time_window = 7
 
 def readCell(cell):
@@ -79,19 +82,55 @@ def analysingWorker(params):
     else:
         dataAnalyser(origin_dir=save_address, originasn=params[0], start=params[1], end=params[2]).main()
 
-def analyzeAnomalies(params=None):
+def analyzeAnomalies(params=None, plot=True):
     q = []
     pool = ThreadPool(4)
+    fig_params = []
     if params is None:
         for dir in os.listdir(save_address):
             if os.path.isdir(save_address + dir):
-                q.append(int(dir))
+                q.append([int(dir)])
     else:
         q = params
+        fig_params = [str(x[0]) for x in params]
     pool.map(analysingWorker, q)
     pool.wait_completion()
+    if plot:
+        plotAnomalies(originasns=fig_params)
+
+def plotAnomalies(originasns=[]):
+    if len(originasns) == 0:
+        for dir in os.listdir(save_address):
+            address = save_address + dir + "/"
+            with open(address + "alerts", mode="r") as input:
+                data = input.readlines()
+            data = [x.strip().split("\n")[-1] for x in "".join(data).split("\n\n")]
+            x = [i.split(": ")[0] for i in data]
+            y = [int(j.split(": ")[1]) for j in data]
+            plt.figure(figsize=(10, 5))
+            plt.xticks(np.arange(12), rotation=20)
+            plt.plot(x, y, 'r')
+            # plt.savefig(address + dir)
+            plt.savefig(fig_address + dir)
+    else:
+        for originasn in originasns:
+            address = save_address + originasn + "/"
+            try:
+                with open(address + "alerts", mode="r") as input:
+                    data = input.readlines()
+            except:
+                continue
+            data = [x.strip().split("\n")[-1] for x in "".join(data).split("\n\n")]
+            x = [i.split(": ")[0] for i in data]
+            y = [int(j.split(": ")[1]) for j in data]
+            plt.figure(figsize=(10, 5))
+            plt.xticks(np.arange(12), rotation=20)
+            plt.plot(x, y, 'r')
+            # plt.savefig(address + originasn)
+            plt.savefig(fig_address + originasn)
 
 if __name__ == '__main__':
     # params = writeAnomalies('A2:E12', all_clear=True)
-    params = writeAnomalies('A14:E20', all_clear=False)
-    analyzeAnomalies(params=params)
+    # params = writeAnomalies('A14:E20', all_clear=False)
+    analyzeAnomalies()
+    # plotAnomalies()
