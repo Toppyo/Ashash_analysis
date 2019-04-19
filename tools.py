@@ -5,8 +5,19 @@ import shutil
 from threading import Thread
 from queue import Queue
 import numpy as np
+from operator import itemgetter
 
 save_address= './results/'
+
+def sortDates(original_dates):
+    dates = []
+    for date in original_dates:
+        date = tuple([int(x) for x in date.split("-")])
+        dates.append(date)
+    dates = sorted(dates, key=itemgetter(0, 1, 2))
+    dates = [datetime(date[0], date[1], date[2]) for date in dates]
+    dates = [str(date)[:10] for date in dates]
+    return dates
 
 class Worker(Thread):
     """ Thread executing tasks from a given tasks queue """
@@ -172,7 +183,8 @@ class dataAnalyser(object):
         return np.median(data), mad
 
     def updateAlerts(self):
-        for date in self.alertCounter.keys():
+        dates = sortDates(list(self.alertCounter.keys()))
+        for date in dates:
             count = 0
             data_address = self.origin_dir + date + "/"
             asns = list(self.baseline_mad.keys())
@@ -191,7 +203,7 @@ class dataAnalyser(object):
             for asn in asns:
                 if 0 < self.baseline_median[asn] - self.baseline_mad[asn]*3:
                     count += 96
-                    self.rw.add(asn.split("_")[1] + ": 96")
+                    self.rw.add(asn.split("_")[1] + ": 96(0)")
             self.rw.add(date + ": " + str(count) + "\n")
             self.alertCounter[date] = count
         self.rw.write("w+")
