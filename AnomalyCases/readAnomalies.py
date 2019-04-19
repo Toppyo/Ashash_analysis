@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from tools import dataWriter, ThreadPool
 
 save_address = '../results_anomalies/'
-time_window = 3
+time_window = 7
 
 def readCell(cell):
   ret = []

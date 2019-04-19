@@ -131,26 +131,33 @@ class recordWriter(object):
             output.write("\n".join(self.outputs))
 
 class dataAnalyser(object):
-    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.01):
+    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.02):
         self.origin_dir = origin_dir + str(originasn) + "/"
         self.originasn = originasn
         self.add_noise = add_noise
+        self.noise_sd = noise_sd
         self.baseline_median = {}
         self.baseline_mad = {}
         self.alertCounter = {}
-        save_address = self.originasn + "alerts"
+        save_address = self.origin_dir + "alerts"
         self.rw = recordWriter(save_address)
 
     def main(self):
         for file in os.listdir(self.origin_dir):
-            try:
+            if file == "alerts":
+                continue
+            if os.path.isfile(self.origin_dir + file):
+                print(file)
+                # print(self.origin_dir+file)
                 data = np.loadtxt(self.origin_dir+file, delimiter="\n", unpack=True)
                 median, mad = self.getBaseline(data)
                 key = file
                 self.baseline_median[key] = median
                 self.baseline_mad[key] = mad
-            except:
+            else:
                 self.alertCounter[file] = 0
+        print(self.baseline_mad)
+        print(self.alertCounter)
         self.updateAlerts()
         # for date in self.alertCounter.keys():
         #     data_address = self.save_address + date + "/"
@@ -158,21 +165,32 @@ class dataAnalyser(object):
 
     def getBaseline(self, data):
         if self.add_noise:
-            data += np.random.normal(0, 0.02, 96)
+            data += np.random.normal(0, self.noise_sd, len(data))
         mad = np.median(np.abs(data - np.median(data)))
+        print(np.median(data))
+        print(mad)
         return np.median(data), mad
 
     def updateAlerts(self):
         for date in self.alertCounter.keys():
             count = 0
             data_address = self.origin_dir + date + "/"
+            asns = list(self.baseline_mad.keys())
+            # print(self.baseline_mad.keys())
             for file in os.listdir(data_address):
                 key = file
+                asns.remove(file)
+                # print(file)
                 data = np.loadtxt(data_address+file, delimiter="\n", unpack=True)
                 sub_count = sum([1 if (x > self.baseline_median[key]+3*self.baseline_mad[key]
                                        or x < self.baseline_median[key]-3*self.baseline_mad[key]) else 0 for x in data ])
                 count += sub_count
-                # TODO deal with 0*96 "invisible" file in each day
-            self.rw.add(date + ": " + str(count))
+                if sub_count>5:
+                    self.rw.add(key.split("_")[1] + ": " + str(sub_count))
+            # deal with 0*96 "invisible" file in each day
+            for asn in asns:
+                if 0 < self.baseline_median[asn] - self.baseline_mad[asn]*3:
+                    count += 96
+            self.rw.add(date + ": " + str(count) + "\n")
             self.alertCounter[date] = count
         self.rw.write("w+")
