@@ -102,6 +102,8 @@ def analyzeAnomalies(params=None, plot=True):
         plotAnomalies(originasns=fig_params)
 
 def plotAnomalies(originasns=[], plotBarGraph=True):
+    if not os.path.exists(fig_address):
+        os.mkdir(fig_address)
     if len(originasns) == 0:
         for dir in os.listdir(save_address):
             address = save_address + dir + "/"
