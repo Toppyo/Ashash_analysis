@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 save_address = "../results_anomalies/"
 fig_address = "./results_figure/"
 time_window = 7
+min_anomalies = 0 # 5
 
 def readCell(cell):
   ret = []
@@ -45,6 +46,8 @@ def clearAnomalies(deep=False):
             for file in address:
                 if os.path.isfile(file):
                     os.remove(file)
+    if not os.path.exists(fig_address):
+        os.mkdir(fig_address)
 
 def writeAnomalies(boundary, all_clear=False):
     ret = []
@@ -98,18 +101,44 @@ def analyzeAnomalies(params=None, plot=True):
     if plot:
         plotAnomalies(originasns=fig_params)
 
-def plotAnomalies(originasns=[]):
+def plotAnomalies(originasns=[], plotBarGraph=True):
     if len(originasns) == 0:
         for dir in os.listdir(save_address):
             address = save_address + dir + "/"
             with open(address + "alerts", mode="r") as input:
                 data = input.readlines()
-            data = [x.strip().split("\n")[-1] for x in "".join(data).split("\n\n")]
+            data = [x.strip().split("\n") for x in "".join(data).split("\n\n")]
+            maximums = [x[:-1] for x in data]
+            data = [x[-1] for x in data]
             x = [i.split(": ")[0] for i in data]
             y = [int(j.split(": ")[1]) for j in data]
             plt.figure(figsize=(10, 5))
-            plt.xticks(np.arange(12), rotation=20)
+            if plotBarGraph:
+                max1st = []
+                max2nd = []
+                for maximum in maximums:
+                    if len(maximum) == 0:
+                        max1st.append(("", 0))
+                        max2nd.append(("", 0))
+                    elif len(maximum) == 1:
+                        max1st.append((maximum[0].split(": ")[0], int(maximum[0].split(": ")[1])))
+                        max2nd.append(("", 0))
+                    else:
+                        max1st.append((maximum[0].split(": ")[0], int(maximum[0].split(": ")[1])))
+                        max2nd.append((maximum[1].split(": ")[0], int(maximum[1].split(": ")[1])))
+                y2 = [x[1] for x in max1st]
+                y3 = [x[1] for x in max2nd]
+                plt.bar(x, y2, width=0.45, align='center', color='c', alpha=0.9)
+                plt.bar(x, y3, width=0.45, bottom=y2, tick_label=y2, align='center', color='y', alpha=0.9)
+                for a, b, label in zip(x, y2, [x[0] for x in max1st]):
+                    if b != 0:
+                        plt.text(a, b, '%s' % label, ha='center', va='bottom', fontsize=10)
+                for a, b1, b2, label in zip(x, y2, y3, [x[0] for x in max2nd]):
+                    if b2 != 0:
+                        plt.text(a, b1 + b2 + 10, '%s' % label, ha='center', va='bottom', fontsize=10)
+            plt.xticks(np.arange(len(x)), labels=x, rotation=20)
             plt.plot(x, y, 'r')
+            plt.gca().set_ylim([0, ])
             # plt.savefig(address + dir)
             plt.savefig(fig_address + dir)
     else:
@@ -120,10 +149,35 @@ def plotAnomalies(originasns=[]):
                     data = input.readlines()
             except:
                 continue
-            data = [x.strip().split("\n")[-1] for x in "".join(data).split("\n\n")]
+            data = [x.strip().split("\n") for x in "".join(data).split("\n\n")]
+            maximums = [x[:-1] for x in data]
+            data = [x[-1] for x in data]
             x = [i.split(": ")[0] for i in data]
             y = [int(j.split(": ")[1]) for j in data]
             plt.figure(figsize=(10, 5))
+            if plotBarGraph:
+                max1st = []
+                max2nd = []
+                for maximum in maximums:
+                    if len(maximum) == 0:
+                        max1st.append(("", 0))
+                        max2nd.append(("", 0))
+                    elif len(maximum) == 1:
+                        max1st.append((maximum[0].split(": ")[0], int(maximum[0].split(": ")[1])))
+                        max2nd.append(("", 0))
+                    else:
+                        max1st.append((maximum[0].split(": ")[0], int(maximum[0].split(": ")[1])))
+                        max2nd.append((maximum[1].split(": ")[0], int(maximum[1].split(": ")[1])))
+                y2 = [x[1] for x in max1st]
+                y3 = [x[1] for x in max2nd]
+                plt.bar(x, y2, width=0.45, align='center', color='c', alpha=0.9)
+                plt.bar(x, y3, width=0.45, bottom=y2, tick_label=y2, align='center', color='y', alpha=0.9)
+                for a, b, label in zip(x, y2, [x[0] for x in max1st]):
+                    if b != 0:
+                        plt.text(a, b, '%s' % label, ha='center', va='bottom', fontsize=10)
+                for a, b1, b2, label in zip(x, y2, y3, [x[0] for x in max2nd]):
+                    if b2 != 0:
+                        plt.text(a, b1 + b2 + 10, '%s' % label, ha='center', va='bottom', fontsize=10)
             plt.xticks(np.arange(12), rotation=20)
             plt.plot(x, y, 'r')
             # plt.savefig(address + originasn)
@@ -132,5 +186,6 @@ def plotAnomalies(originasns=[]):
 if __name__ == '__main__':
     # params = writeAnomalies('A2:E12', all_clear=True)
     # params = writeAnomalies('A14:E20', all_clear=False)
+    # params = writeAnomalies('A8:E8')
     analyzeAnomalies()
     # plotAnomalies()

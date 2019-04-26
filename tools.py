@@ -142,13 +142,14 @@ class recordWriter(object):
             output.write("\n".join(self.outputs))
 
 class dataAnalyser(object):
-    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.02, start="all", end="all"):
+    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.02, start="all", end="all", min_anomalies=0):
         self.origin_dir = origin_dir + str(originasn) + "/"
         self.originasn = originasn
         self.add_noise = add_noise
         self.noise_sd = noise_sd
         self.start = start
         self.end = end
+        self.min_anomalies = min_anomalies
         self.baseline_median = {}
         self.baseline_mad = {}
         self.alertCounter = {}
@@ -192,6 +193,7 @@ class dataAnalyser(object):
             count = 0
             data_address = self.origin_dir + date + "/"
             asns = list(self.baseline_mad.keys())
+            sub_anomalies = []
             # print(self.baseline_mad.keys())
             for file in os.listdir(data_address):
                 key = file
@@ -201,8 +203,12 @@ class dataAnalyser(object):
                 sub_count = sum([1 if (x > self.baseline_median[key]+3*self.baseline_mad[key]
                                        or x < self.baseline_median[key]-3*self.baseline_mad[key]) else 0 for x in data ])
                 count += sub_count
-                if sub_count>5:
-                    self.rw.add(key.split("_")[1] + ": " + str(sub_count))
+                if sub_count>self.min_anomalies:
+                    # self.rw.add(key.split("_")[1] + ": " + str(sub_count))
+                    sub_anomalies.append((key.split("_")[1], sub_count))
+            sub_anomalies = sorted(sub_anomalies, key=lambda x: x[1], reverse=True)
+            for (a, b) in sub_anomalies:
+                self.rw.add(a + ": " + str(b))
             # deal with 0*96 "invisible" file in each day # TODO should we?
             # for asn in asns:
             #     if 0 < self.baseline_median[asn] - self.baseline_mad[asn]*3:
