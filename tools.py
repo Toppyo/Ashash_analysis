@@ -6,6 +6,8 @@ from threading import Thread
 from queue import Queue
 import numpy as np
 from operator import itemgetter
+import re
+import matplotlib.pyplot as plt
 
 save_address= './results/'
 
@@ -18,6 +20,19 @@ def sortDates(original_dates):
     dates = [datetime(date[0], date[1], date[2]) for date in dates]
     dates = [str(date)[:10] for date in dates]
     return dates
+
+def plot_roc_curve(fprs, tprs, labels, save_address=save_address):
+    # plt.figure(1)
+    for fpr, tpr, label in zip(fprs, tprs, labels):
+        plt.plot(fpr, tpr, color=np.random.rand(3, ), label=label)
+    plt.plot([0, 1], [0, 1], color='darkblue', linestyle='--')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic (ROC) Curve')
+    plt.legend()
+    plt.savefig(save_address)
+    plt.clf()
+    plt.cla()
 
 class Worker(Thread):
     """ Thread executing tasks from a given tasks queue """
@@ -61,13 +76,15 @@ class ThreadPool:
         self.tasks.join()
 
 class dataWriter(object):
-    def __init__(self, originasns, day1, day2, save_address=save_address):
+    def __init__(self, originasns, day1, day2, save_address=save_address, labeled=False, labels=[]):
         self.hegeDict = {}
         self.HegeDict = {}
         self.originasns = originasns
         self.startdate = day1
         self.enddate = day2
         self.save_address = save_address
+        self.labeled = labeled
+        self.labels = labels
         if not os.path.exists(self.save_address):
             os.mkdir(self.save_address)
         if not os.path.exists(self.save_address+'/'+str(self.originasns)):
@@ -78,6 +95,9 @@ class dataWriter(object):
         count = 0
         if clear:
             self.clear()
+        if self.labeled:
+            with open(self.save_address+"labels", "w+") as output:
+                output.write("\n".join([str(x) for x in self.labels]))
         d1 = datetime.strptime(self.startdate, '%Y-%m-%d')
         d2 = datetime.strptime(self.enddate, '%Y-%m-%d')+timedelta(days=1)
         while d1 != d2:
@@ -158,10 +178,10 @@ class dataAnalyser(object):
 
     def main(self):
         for file in os.listdir(self.origin_dir):
-            if file == "alerts":
-                continue
             if os.path.isfile(self.origin_dir + file):
-                print(file)
+                if len(re.findall("_", file)) == 0:
+                    print(file)
+                    continue
                 # print(self.origin_dir+file)
                 data = np.loadtxt(self.origin_dir+file, delimiter="\n", unpack=True)
                 median, mad = self.getBaseline(data)

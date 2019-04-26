@@ -2,15 +2,18 @@ import pygsheets
 import pandas as pd
 import os
 from datetime import datetime, timedelta
-from tools import dataWriter, dataAnalyser, ThreadPool
+from tools import dataWriter, dataAnalyser, ThreadPool, plot_roc_curve
 import shutil
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_auc_score
 
 save_address = "../results_anomalies/"
 fig_address = "./results_figure/"
 time_window = 7
 min_anomalies = 0 # 5
+noise_sd_default = 1e-1
 
 def readCell(cell):
   ret = []
@@ -57,11 +60,11 @@ def writeAnomalies(boundary, all_clear=False):
     tasks = []
     for anomaly in anomalies:
         print(anomaly[0])
-        t1, t2 = calculateTimeWindow(anomaly[1], anomaly[2])
+        t1, t2, labels = calculateTimeWindow(anomaly[1], anomaly[2])
         print(t1)
         print(t2)
         ret.append([anomaly[0], t1, t2])
-        tasks.append([anomaly[0], t1, t2, save_address])
+        tasks.append([anomaly[0], t1, t2, save_address, True, labels])
     pool.map(writingWorker, tasks)
     pool.wait_completion()
     return ret
@@ -70,30 +73,39 @@ def writeAnomalies(boundary, all_clear=False):
 
 # F for forward, N for normal
 def calculateTimeWindow(t1, t2, mode='F'):
+    startTime = datetime.strptime(t1, '%Y-%m-%d')
+    endTime = datetime.strptime(t2, '%Y-%m-%d')
+    positive_labels = [1]*int(((endTime-startTime)/timedelta(days=1))+1)
     if mode=='N':
-        return str(datetime.strptime(t1, '%Y-%m-%d')-timedelta(days=time_window))[:10],\
-               str(datetime.strptime(t2, '%Y-%m-%d')+timedelta(days=time_window))[:10]
+        labels = [0]*time_window
+        labels.extend(positive_labels)
+        labels.extend([0]*time_window)
+        return str(startTime-timedelta(days=time_window))[:10],\
+               str(endTime+timedelta(days=time_window))[:10], labels
     if mode=='F':
-        return str(datetime.strptime(t1, '%Y-%m-%d')-2*timedelta(days=time_window))[:10], t2
+        labels = [0]*(2*time_window)
+        labels.extend(positive_labels)
+        return str(datetime.strptime(t1, '%Y-%m-%d')-2*timedelta(days=time_window))[:10], t2, labels
 
 def writingWorker(params):
-    dataWriter(params[0], params[1], params[2], params[3]).main(False)
+    dataWriter(params[0], params[1], params[2], params[3], params[4], params[5]).main(False)
 
 def analysingWorker(params):
-    if len(params)==1:
-        dataAnalyser(origin_dir=save_address, originasn=params[0]).main()
+    if len(params)==2:
+        dataAnalyser(origin_dir=save_address, originasn=params[0], noise_sd=params[1]).main()
     else:
-        dataAnalyser(origin_dir=save_address, originasn=params[0], start=params[1], end=params[2]).main()
+        dataAnalyser(origin_dir=save_address, originasn=params[0], start=params[1], end=params[2], noise_sd=params[3]).main()
 
-def analyzeAnomalies(params=None, plot=True):
+def analyzeAnomalies(params=None, plot=True, noise_sd=noise_sd_default):
     q = []
     pool = ThreadPool(4)
     fig_params = []
     if params is None:
         for dir in os.listdir(save_address):
             if os.path.isdir(save_address + dir):
-                q.append([int(dir)])
+                q.append([int(dir), noise_sd])
     else:
+        q = [param.append(noise_sd) for param in params]
         q = params
         fig_params = [str(x[0]) for x in params]
     pool.map(analysingWorker, q)
@@ -140,9 +152,11 @@ def plotAnomalies(originasns=[], plotBarGraph=True):
                         plt.text(a, b1 + b2 + 10, '%s' % label, ha='center', va='bottom', fontsize=10)
             plt.xticks(np.arange(len(x)), labels=x, rotation=20)
             plt.plot(x, y, 'r')
-            plt.gca().set_ylim([0, ])
+            plt.gca().set_ylim([0, None])
             # plt.savefig(address + dir)
             plt.savefig(fig_address + dir)
+            plt.clf()
+            plt.cla()
     else:
         for originasn in originasns:
             address = save_address + originasn + "/"
@@ -182,12 +196,44 @@ def plotAnomalies(originasns=[], plotBarGraph=True):
                         plt.text(a, b1 + b2 + 10, '%s' % label, ha='center', va='bottom', fontsize=10)
             plt.xticks(np.arange(12), rotation=20)
             plt.plot(x, y, 'r')
-            # plt.savefig(address + originasn)
+            plt.gca().set_ylim([0, None])
             plt.savefig(fig_address + originasn)
+            plt.clf()
+            plt.cla()
+
+def drawROC(noises):
+    fprs = []
+    tprs = []
+    draw_labels = []
+    for noise_sd in noises:
+        analyzeAnomalies(plot=False, noise_sd=noise_sd)
+        measured = []
+        labels = []
+        for dir in os.listdir(save_address):
+            sub_address = save_address + dir +"/"
+            try:
+                with open(sub_address+"alerts", mode="r") as input:
+                    alerts = ("".join(input.readlines())).split('\n\n')
+                with open(sub_address+"labels", mode="r") as input:
+                    labels.extend([int(label) for label in input.readlines()])
+                print(dir)
+            except:
+                continue
+            alerts = [alert.strip().split("\n")[-1] for alert in alerts]
+            alerts = [int(alert.split(": ")[1]) for alert in alerts]
+            alerts = [alert / (max(alerts) if max(alerts)>0 else 1) for alert in alerts]
+            measured.extend(alerts)
+        draw_label = "NoiseSD={0}_AUC: {1}".format(noise_sd, roc_auc_score(labels, measured))
+        draw_labels.append(draw_label)
+        fpr, tpr, thresholds = roc_curve(labels, measured)
+        fprs.append(fpr)
+        tprs.append(tpr)
+    plot_roc_curve(fprs, tprs, draw_labels, save_address=fig_address+"ROC")
 
 if __name__ == '__main__':
     # params = writeAnomalies('A2:E12', all_clear=True)
     # params = writeAnomalies('A14:E20', all_clear=False)
-    # params = writeAnomalies('A8:E8')
-    analyzeAnomalies()
-    # plotAnomalies()
+    # params = writeAnomalies('A13:E13')
+    # params = writeAnomalies('A2:E20', all_clear=False)
+    # analyzeAnomalies()
+    drawROC([0.01, 0.02, 0.05, 0.1])
