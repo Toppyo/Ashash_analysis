@@ -9,7 +9,8 @@ from operator import itemgetter
 import re
 import matplotlib.pyplot as plt
 
-save_address= './results/'
+save_address= '/Users/sylar/work/Ashash_analysis/results/'
+fig_address = '/Users/sylar/work/Ashash_analysis/results/figures/'
 
 def sortDates(original_dates):
     dates = []
@@ -30,6 +31,16 @@ def plot_roc_curve(fprs, tprs, labels, save_address=save_address):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver Operating Characteristic (ROC) Curve')
     plt.legend()
+    plt.savefig(save_address)
+    plt.clf()
+    plt.cla()
+
+def plot_signals(signals, upperbound, lowerbound, xticks, save_address):
+    x = np.arange(len(signals))
+    plt.plot(x, signals, color='r')
+    plt.plot(x, [upperbound]*len(signals), color='darkblue', linestyle='--')
+    plt.plot(x, [lowerbound]*len(signals), color='darkblue', linestyle='--')
+    plt.xticks([x*96+48 for x in np.arange(int(len(signals))/96)], xticks, rotation=23)
     plt.savefig(save_address)
     plt.clf()
     plt.cla()
@@ -162,7 +173,10 @@ class recordWriter(object):
             output.write("\n".join(self.outputs))
 
 class dataAnalyser(object):
-    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.02, start="all", end="all", min_anomalies=0):
+    '''
+    plot_signals cant be set to True manually, please use drawSignals() in readAnomalies.py if you want to get the figures of signals
+    '''
+    def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.02, start="all", end="all", min_anomalies=0, mad_param=3, plot_signals=False):
         self.origin_dir = origin_dir + str(originasn) + "/"
         self.originasn = originasn
         self.add_noise = add_noise
@@ -170,6 +184,8 @@ class dataAnalyser(object):
         self.start = start
         self.end = end
         self.min_anomalies = min_anomalies
+        self.mad_param = mad_param
+        self.plot_signals = plot_signals
         self.baseline_median = {}
         self.baseline_mad = {}
         self.alertCounter = {}
@@ -180,14 +196,13 @@ class dataAnalyser(object):
         for file in os.listdir(self.origin_dir):
             if os.path.isfile(self.origin_dir + file):
                 if len(re.findall("_", file)) == 0:
-                    print(file)
+                    # print(file)
                     continue
                 # print(self.origin_dir+file)
                 data = np.loadtxt(self.origin_dir+file, delimiter="\n", unpack=True)
                 median, mad = self.getBaseline(data)
-                key = file
-                self.baseline_median[key] = median
-                self.baseline_mad[key] = mad
+                self.baseline_median[file] = median
+                self.baseline_mad[file] = mad
             else:
                 if self.start is not "all":
                     if (datetime.strptime(file, '%Y-%m-%d')-datetime.strptime(self.start, '%Y-%m-%d'))/timedelta(days=1) > -1 \
@@ -195,9 +210,27 @@ class dataAnalyser(object):
                         self.alertCounter[file] = 0
                 else:
                     self.alertCounter[file] = 0
+        # if self.plot_signals:
+        #     for file in os.listdir(self.origin_dir):
+        #         if
         # print(self.baseline_mad)
         # print(self.alertCounter)
         self.updateAlerts()
+        if self.plot_signals:
+            with open(self.origin_dir + "alerts", mode="r") as input:
+                data = input.readlines()
+            data = [x.strip().split("\n") for x in "".join(data).split("\n\n")]
+            data = [x[-1] for x in data]
+            ticks = [i.split(": ")[0] for i in data]
+            sub_fig_address = fig_address + str(self.originasn) + "/" + ticks[0] + "_" + ticks[-1] + "/"
+            if not os.path.exists(sub_fig_address):
+                os.makedirs(sub_fig_address)
+            for file in os.listdir(self.origin_dir):
+                if os.path.isfile(self.origin_dir + file) and len(re.findall('_', file)) > 0:
+                    with open(self.origin_dir + file) as input:
+                        signals = [float(x.strip()) for x in input.readlines()]
+                    plot_signals(signals, self.baseline_median[file]+self.mad_param*self.baseline_mad[file],
+                                 self.baseline_median[file]-self.mad_param*self.baseline_mad[file], ticks, sub_fig_address+file)
 
     def getBaseline(self, data):
         if self.add_noise:
@@ -220,8 +253,8 @@ class dataAnalyser(object):
                 asns.remove(file)
                 # print(file)
                 data = np.loadtxt(data_address+file, delimiter="\n", unpack=True)
-                sub_count = sum([1 if (x > self.baseline_median[key]+3*self.baseline_mad[key]
-                                       or x < self.baseline_median[key]-3*self.baseline_mad[key]) else 0 for x in data ])
+                sub_count = sum([1 if (x > self.baseline_median[key]+self.mad_param*self.baseline_mad[key]
+                                       or x < self.baseline_median[key]-self.mad_param*self.baseline_mad[key]) else 0 for x in data])
                 count += sub_count
                 if sub_count>self.min_anomalies:
                     # self.rw.add(key.split("_")[1] + ": " + str(sub_count))
@@ -237,3 +270,7 @@ class dataAnalyser(object):
             self.rw.add(date + ": " + str(count) + "\n")
             self.alertCounter[date] = count
         self.rw.write("w+")
+
+if __name__ == "__main__":
+    da = dataAnalyser("./results_anomalies/", 58224)
+    da.main()

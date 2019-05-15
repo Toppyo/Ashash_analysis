@@ -2,18 +2,19 @@ import pygsheets
 import pandas as pd
 import os
 from datetime import datetime, timedelta
-from tools import dataWriter, dataAnalyser, ThreadPool, plot_roc_curve
+from tools import dataWriter, dataAnalyser, ThreadPool, plot_roc_curve, plot_signals
 import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
+import re
 
 save_address = "../results_anomalies/"
 fig_address = "./results_figure/"
 time_window = 7
 min_anomalies = 0 # 5
-noise_sd_default = 1e-1
+noise_sd_default = 2e-2
 
 def readCell(cell):
   ret = []
@@ -152,7 +153,7 @@ def plotAnomalies(originasns=[], plotBarGraph=True):
                         plt.text(a, b1 + b2 + 10, '%s' % label, ha='center', va='bottom', fontsize=10)
             plt.xticks(np.arange(len(x)), labels=x, rotation=20)
             plt.plot(x, y, 'r')
-            plt.gca().set_ylim([0, None])
+            # plt.gca().set_ylim([0, None])
             # plt.savefig(address + dir)
             plt.savefig(fig_address + dir)
             plt.clf()
@@ -196,7 +197,7 @@ def plotAnomalies(originasns=[], plotBarGraph=True):
                         plt.text(a, b1 + b2 + 10, '%s' % label, ha='center', va='bottom', fontsize=10)
             plt.xticks(np.arange(12), rotation=20)
             plt.plot(x, y, 'r')
-            plt.gca().set_ylim([0, None])
+            # plt.gca().set_ylim([0, None])
             plt.savefig(fig_address + originasn)
             plt.clf()
             plt.cla()
@@ -216,19 +217,30 @@ def drawROC(noises):
                     alerts = ("".join(input.readlines())).split('\n\n')
                 with open(sub_address+"labels", mode="r") as input:
                     labels.extend([int(label) for label in input.readlines()])
-                print(dir)
+                # print(dir)
             except:
                 continue
             alerts = [alert.strip().split("\n")[-1] for alert in alerts]
             alerts = [int(alert.split(": ")[1]) for alert in alerts]
-            alerts = [alert / (max(alerts) if max(alerts)>0 else 1) for alert in alerts]
+            maxAlerts = (len(os.listdir(sub_address))-len(alerts)-2)*48
+            # print(str(dir)+": ")
+            # print(len(os.listdir(sub_address))-len(alerts)-2)
+            # print()
+            alerts = [alert / maxAlerts for alert in alerts]
             measured.extend(alerts)
         draw_label = "NoiseSD={0}_AUC: {1}".format(noise_sd, roc_auc_score(labels, measured))
         draw_labels.append(draw_label)
         fpr, tpr, thresholds = roc_curve(labels, measured)
         fprs.append(fpr)
         tprs.append(tpr)
-    plot_roc_curve(fprs, tprs, draw_labels, save_address=fig_address+"ROC")
+    plot_roc_curve(fprs, tprs, draw_labels, save_address="../test_generated/ROC_3mad")
+
+def drawSignals(asns="all"):
+    for asn in os.listdir(save_address):
+        if asns is not "all" and int(asn) not in asns:
+            continue
+        da = dataAnalyser(save_address, int(asn), plot_signals=True)
+        da.main()
 
 if __name__ == '__main__':
     # params = writeAnomalies('A2:E12', all_clear=True)
@@ -236,4 +248,5 @@ if __name__ == '__main__':
     # params = writeAnomalies('A13:E13')
     # params = writeAnomalies('A2:E20', all_clear=False)
     # analyzeAnomalies()
-    drawROC([0.01, 0.02, 0.05, 0.1])
+    # drawROC([0.01, 0.02, 0.05, 0.1])
+    drawSignals()
