@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="301e7782-1107-41be-be62-c1c5e741f33f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/AnomalyCases/readAnomalies.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyCases/readAnomalies.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,11 +13,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="tools.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tools.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="176" column="58" selection-start-line="176" selection-start-column="58" selection-end-line="176" selection-end-column="58" />
+            <state relative-caret-position="339">
+              <caret line="45" column="16" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
@@ -26,41 +25,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="readAnomalies.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="readAnomalies.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AnomalyCases/readAnomalies.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2471">
-              <caret line="251" column="16" selection-start-line="251" selection-start-column="16" selection-end-line="251" selection-end-column="16" />
+            <state relative-caret-position="209">
+              <caret line="155" column="14" selection-start-line="155" selection-start-column="14" selection-end-line="155" selection-end-column="43" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="600_174.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_174.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="600_1299.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_1299.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="600_3257.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_3257.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="600_7018.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_7018.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="600_11164.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_11164.png">
-          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
     </leaf>
@@ -82,6 +56,7 @@
       <find>finda</find>
       <find>xti</find>
       <find>int</find>
+      <find>lim</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -100,7 +75,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="width" value="1680" />
     <option name="height" value="1050" />
   </component>
@@ -122,32 +97,6 @@
               <item name="Ashash_analysis" type="b2602c69:ProjectViewProjectNode" />
               <item name="Ashash_analysis" type="462c0819:PsiDirectoryNode" />
               <item name="AnomalyCases" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ashash_analysis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ashash_analysis" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ashash_analysis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ashash_analysis" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
-              <item name="figures" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ashash_analysis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ashash_analysis" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
-              <item name="figures" type="462c0819:PsiDirectoryNode" />
-              <item name="600" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ashash_analysis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ashash_analysis" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
-              <item name="figures" type="462c0819:PsiDirectoryNode" />
-              <item name="600" type="462c0819:PsiDirectoryNode" />
-              <item name="2018-12-13_2018-12-27" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -257,16 +206,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <frame x="0" y="0" width="1680" height="1050" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="10" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="6" visible="true" weight="0.29058117" />
+      <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.29058117" />
       <window_info anchor="bottom" id="Version Control" order="2" />
       <window_info anchor="bottom" id="Python Console" order="3" />
       <window_info anchor="bottom" id="Terminal" order="0" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.25" />
       <window_info anchor="right" id="R Packages" order="2" />
       <window_info anchor="right" id="R Graphics" order="0" />
       <window_info anchor="bottom" id="Find" order="5" weight="0.3296593" />
@@ -290,86 +239,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/204317.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/37616.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/37390.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/35160.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/32842.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/12880.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/14992.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/13335.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/197426.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/57958.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/anomalies">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="16" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/results_anomalies/57958/labels">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/results_anomalies/57958/alerts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-270">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/ROC_7mad.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/ROC_10mad.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_generated/roc_test.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_generated/ROC_10mad.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/ROC_5mad.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/ROC_3mad.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_generated/58224.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_generated/ROC_3mad.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_generated/ROC_5mad.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/3833.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/29256.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/131279.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -377,9 +246,6 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/test_generated/ROC_7mad.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/58224.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/results_anomalies/12880/12880_3320">
@@ -407,21 +273,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_174.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_1273.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_3257.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_2880.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_49666.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_6762.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -432,9 +283,6 @@
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_6453.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_12389.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/analyser.py">
@@ -453,10 +301,13 @@
     <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_174.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_1299.png">
+    <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_209.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_3257.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_2914.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_7018.png">
@@ -465,22 +316,112 @@
     <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_11164.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyCases/readAnomalies.py">
+    <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_7106.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_6762.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/600/2018-12-13_2018-12-27/600_1299.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/35160/2018-05-26_2018-06-09/35160_60929.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/35160/2018-05-26_2018-06-09/35160_50597.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_5511.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_12389.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_34984.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_3491.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_6939.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_174.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/35160/2018-05-26_2018-06-09/35160_174.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_286.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/35160/2018-05-26_2018-06-09/35160_3257.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/58224.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_49666.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_1299.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_1273.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_2880.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_3257.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/58224/2018-07-16_2018-07-30/58224_2914.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/ROC_3mad.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/35160/2018-05-26_2018-06-09/35160_1299.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/32842.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/14992.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/29256.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/37390.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/35160.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/results_figure/204317.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results/figures/35160/2018-05-26_2018-06-09/35160_35160.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2471">
-          <caret line="251" column="16" selection-start-line="251" selection-start-column="16" selection-end-line="251" selection-end-column="16" />
+        <state relative-caret-position="339">
+          <caret line="45" column="16" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
           <folding>
-            <element signature="e#0#16#0" expanded="true" />
+            <element signature="e#0#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools.py">
+    <entry file="file://$PROJECT_DIR$/AnomalyCases/readAnomalies.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="176" column="58" selection-start-line="176" selection-start-column="58" selection-end-line="176" selection-end-column="58" />
+        <state relative-caret-position="209">
+          <caret line="155" column="14" selection-start-line="155" selection-start-column="14" selection-end-line="155" selection-end-column="43" />
           <folding>
-            <element signature="e#0#33#0" expanded="true" />
+            <element signature="e#0#16#0" expanded="true" />
           </folding>
         </state>
       </provider>

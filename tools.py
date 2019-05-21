@@ -41,6 +41,9 @@ def plot_signals(signals, upperbound, lowerbound, xticks, save_address):
     plt.plot(x, [upperbound]*len(signals), color='darkblue', linestyle='--')
     plt.plot(x, [lowerbound]*len(signals), color='darkblue', linestyle='--')
     plt.xticks([x*96+48 for x in np.arange(int(len(signals))/96)], xticks, rotation=23)
+    plt.gca().set_ylim([0, None])
+    plt.ylabel("AS Hegemony")
+    plt.grid(True)
     plt.savefig(save_address)
     plt.clf()
     plt.cla()
@@ -174,7 +177,7 @@ class recordWriter(object):
 
 class dataAnalyser(object):
     '''
-    plot_signals cant be set to True manually, please use drawSignals() in readAnomalies.py if you want to get the figures of signals
+    plot_signals cannot be set to True manually, please use drawSignals() in readAnomalies.py if you want to get the figures of signals
     '''
     def __init__(self, origin_dir, originasn, add_noise=True, noise_sd=0.02, start="all", end="all", min_anomalies=0, mad_param=3, plot_signals=False):
         self.origin_dir = origin_dir + str(originasn) + "/"
